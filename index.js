@@ -1,10 +1,20 @@
 const express = require("express");
+const dotenv = require("dotenv");
+const logger = require("./middleware/logger");
 const app = express();
 
-app.get("/", function (req, res) {
-  res.send("Hello world");
-});
+//middleware
+app.use(logger);
 
-app.listen(3000, () => {
-  console.log("Server is listening at port: 3000");
+//routers
+const bootcamps = require("./routes/bootcamps");
+
+//loading environment variables
+dotenv.config({ path: "./config.env" });
+
+app.use("/api/v1/bootcamps", bootcamps);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
 });
